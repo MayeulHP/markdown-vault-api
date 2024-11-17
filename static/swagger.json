@@ -313,6 +313,14 @@
         "responses": {
           "200": {
             "description": "Partial note content updated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid line range or missing 'content'"
