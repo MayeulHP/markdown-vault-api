@@ -1,0 +1,274 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Obsidian Vault API",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/note/{note_path}": {
+      "get": {
+        "summary": "View a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note content",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Edit a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "New content for the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note updated successfully"
+          },
+          "400": {
+            "description": "Missing 'content' in request body"
+          },
+          "500": {
+            "description": "Error updating note"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Append to a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "Content to append",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "Content to append to the note"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content appended successfully"
+          },
+          "400": {
+            "description": "Missing 'content' in request body"
+          },
+          "404": {
+            "description": "Note not found"
+          },
+          "500": {
+            "description": "Error appending to note"
+          }
+        }
+      }
+    },
+    "/note/{note_path}/search": {
+      "get": {
+        "summary": "Search within a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Search query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "matches": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing 'q' parameter"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "summary": "Search across the entire vault",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Search query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing 'q' parameter"
+          }
+        }
+      }
+    },
+    "/folder/{folder_path}": {
+      "get": {
+        "summary": "View contents of a folder",
+        "parameters": [
+          {
+            "name": "folder_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the folder within the vault"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder contents",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "contents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found or invalid path"
+          }
+        }
+      }
+    },
+    "/note/{note_path}/lines/{start_line}-{end_line}": {
+      "get": {
+        "summary": "View specific lines of a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          },
+          {
+            "name": "start_line",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Starting line number"
+          },
+          {
+            "name": "end_line",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Ending line number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Partial note content",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid line range"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        }
+      }
+    }
+  }
+}
