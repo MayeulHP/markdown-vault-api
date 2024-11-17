@@ -152,6 +152,37 @@ def view_part_of_note(note_path, start_line, end_line):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/note/<path:note_path>/lines/<int:start_line>-<int:end_line>', methods=['PATCH'])
+def edit_part_of_note(note_path, start_line, end_line):
+    """Edit a specific part of a note."""
+
+    file_path = os.path.join(VAULT_ROOT, note_path + ".md")
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Note not found"}), 404
+
+    try:
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+
+        if start_line < 1 or end_line > len(lines) or start_line > end_line:
+            return jsonify({"error": "Invalid line range"}), 400
+
+        new_content = request.json.get('content')
+        if not new_content:
+            return jsonify({"error": "Missing 'content' in request body"}), 400
+
+
+        lines[start_line-1:end_line] = [new_content + '\n']  # Ensure newline at the end
+
+        with open(file_path, 'w') as f:
+            f.writelines(lines)
+
+        return jsonify({"message": "Note updated successfully"})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

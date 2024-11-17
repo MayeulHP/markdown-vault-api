@@ -269,6 +269,59 @@
           }
         }
       }
+    },
+    "/note/{note_path}/lines/{start_line}-{end_line}": {
+      "patch": {
+        "summary": "Edit specific lines of a note",
+        "parameters": [
+          {
+            "name": "note_path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Path to the note within the vault"
+          },
+          {
+            "name": "start_line",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Starting line number"
+          },
+          {
+            "name": "end_line",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Ending line number"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "New content for the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Partial note content updated",
+          },
+          "400": {
+            "description": "Invalid line range or missing 'content'"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        }
+      }
     }
   }
 }
